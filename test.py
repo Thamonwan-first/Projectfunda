@@ -87,7 +87,7 @@ def draw_minion(canvas):
                             550,390,#
                             500,440,
                             300,440,
-                            outline='black', fill='darkblue')
+                            outline='#6281b0', fill='#6281b0')
     # ดีเทลชุด
     canvas.create_polygon(
                         350,455,
@@ -101,16 +101,17 @@ def draw_minion(canvas):
                         350,500,
                         350,455,
                         
-                        outline='black',fill='darkblue' ,smooth=True,width=1)
+                        outline='#3b5572',fill='#6281b0' ,smooth=True,width=1)
     
-    canvas.create_oval(380,465,420,505, fill="yellow", outline="gray", width=10)
+    canvas.create_oval(380,465,420,505, fill="#6281b0", outline="#313131", width=10)
 
-    canvas.create_oval(290,450,310,470, fill="gray", outline="black", width=1)
-    canvas.create_oval(490,450,510,470, fill="gray", outline="black", width=1)
+    canvas.create_oval(290,450,310,470, fill="gray", outline="#313131", width=2)
+    canvas.create_oval(490,450,510,470, fill="gray", outline="#313131", width=2)
 
     canvas.create_line( 520,500,
                         535,512,
                         550,525, fill="gray", width=1,smooth=True)
+    canvas.create_arc(250, 510, 550, 590,start=180, extent=180, style=tk.CHORD,fill="#6281b0", outline="#6281b0")
 
     
 
@@ -119,8 +120,8 @@ def draw_minion(canvas):
     # canvas.create_line(300, 250, 350, 300, width=15, fill="yellow")
 
     # # ขา
-    # canvas.create_line(170, 400, 170, 450, width=15, fill="black")
-    # canvas.create_line(230, 400, 230, 450, width=15, fill="black")
+    canvas.create_polygon(340, 580,  350, 600,  350,640,  405,630, 405,610,  405,580,  340,580 ,fill='#6281b0' ,smooth=True)
+    # canvas.create_polygon(230, 400, 230, 450, width=15, fill="black")
 
 
 draw_minion(canvas)
