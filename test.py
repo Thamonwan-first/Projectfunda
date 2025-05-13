@@ -120,8 +120,35 @@ def draw_minion(canvas):
     # canvas.create_line(300, 250, 350, 300, width=15, fill="yellow")
 
     # # ขา
-    canvas.create_polygon(340, 580,  350, 600,  350,640,  405,630, 405,610,  405,580,  340,580 ,fill='#6281b0' ,smooth=True)
-    # canvas.create_polygon(230, 400, 230, 450, width=15, fill="black")
+    canvas.create_polygon(330, 580,  340, 600,  340,640,  395,630, 395,610,  395,580,  330,580 ,fill='#6281b0' ,smooth=True)
+    canvas.create_polygon(408, 580,  408, 600,  408,630,  460,630, 460,615,  460,600,  475,570 ,fill='#6281b0' ,smooth=True)
+    # รองเท้า (ด้านซ้าย)
+    canvas.create_polygon(340, 620, 
+                          310, 630, 
+                          305, 645, 
+                          340, 650, 
+                          355, 650, 
+                          393, 648, 
+                          393, 632,
+                          393, 624,
+                          370,625, 
+                          350, 623,
+                          fill='#313131', smooth=True)
+
+    # รองเท้า (ด้านขวา)
+    canvas.create_polygon(408, 620,
+                          408, 630,
+                          408, 650, 
+                          450, 660,
+                          470, 660, 
+                          465, 660, 
+                          478, 655, 
+                          470, 630, 
+                          460, 625,
+                          440, 630,  
+                          fill='#313131', smooth=True)
+
+
 
 
 draw_minion(canvas)
