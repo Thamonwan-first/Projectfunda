@@ -1,11 +1,16 @@
 import tkinter as tk
 import tkinter.font as tkFont 
+import random
 
 root = tk.Tk()
 root.title("Minion Drawing")
 
 canvas = tk.Canvas(root, width=800, height=660, bg="#78a5e9")
 canvas.pack()
+
+button_frame = tk.Frame(root)
+button_frame.pack(pady=20)  # วางไว้ด้านขวาของ root window
+btn_font = tkFont.Font(family="Tahoma", size=10, weight="bold")
 
 
 blink_state = [False]  # ใช้ list เพื่อให้เปลี่ยนค่าภายในฟังก์ชันได้
@@ -14,111 +19,13 @@ heart_looping = [False]  # ควบคุมว่าจะให้หัว�
 heart_ids = []  # เก็บ ID รูปหัวใจไว้ลบ
 should_blink = [True]  # เปิด-ปิดการกระพริบ
 balloon_ids = []  # เก็บ ID ของลูกโป่ง
+color_body = "#ffe941"
 
-
-def blink_eye():
-    if not should_blink[0]:
-        return  # ถ้าไม่ควรกระพริบตา ให้หยุดทำงาน
-
-    if blink_state[0]:
-        # ลืมตา
-        if eye_cover_id[0]:
-            canvas.delete(eye_cover_id[0])
-            eye_cover_id[0] = None
-        blink_state[0] = False
-        canvas.after(3000, blink_eye)
-    else:
-        # หลับตา
-        eye_cover_id[0] = canvas.create_oval(320, 165, 465, 340,
-                                             fill="#ffe941", outline="#ffe941")
-        blink_state[0] = True
-        canvas.after(150, blink_eye)
-# สร้างปุ่ม
-def show_bored_then_back():
-    def draw_bored():
-        canvas.delete("face")  # ลบเฉพาะหน้าก่อนวาดใหม่
-        canvas.delete("mouth")
-        # ตาขาว
-        canvas.create_arc(320, 165, 465, 340,start=0, extent=180, style=tk.CHORD,fill="#ffe941",outline="#ffe941", width=2)#eye top
-        canvas.create_arc(320, 165, 465, 335,start=180, extent=180, style=tk.CHORD,fill="white",outline="white", width=2)#eye bottom
-        #ตาดำ
-        canvas.create_arc(340, 210, 400, 290,start=180, extent=180, style=tk.CHORD,fill="brown",outline="brown", width=2)
-        canvas.create_arc(350, 220, 390, 280,start=180, extent=180, style=tk.CHORD,fill="black",outline="black", width=2)
-        # ปาก
-        canvas.create_line(290, 330, 360,380,390,380,smooth=True,width=2)
-    #should_blink[0] = False  # ปิดการกระพริบตา
-    if eye_cover_id[0]:  # ถ้าตากำลังหลับอยู่ ให้ลบเปลือกตา
-        canvas.delete(eye_cover_id[0])
-        eye_cover_id[0] = None
-        blink_state[0] = False
-
-    draw_bored()
-
-    def restore_normal():
-        draw_minion(canvas)
-        should_blink[0] = True
-        blink_eye()  # กลับมากระพริบต่อ
-
-    canvas.after(10000, restore_normal) 
-
-def show_love_face():
-    def loop_heart_in_eye(step=0):
-        # canvas.delete("eye")
-        if not heart_looping[0]:
-            # หยุดแอนิเมชัน: ลบหัวใจทั้งหมด
-            for hid in heart_ids:
-                canvas.delete(hid)
-            heart_ids.clear()
-            return
-
-        sizes = [40, 60, 80, 60]  # ขนาดหัวใจ วนเป็นจังหวะตุ้บๆ
-        size = sizes[step % len(sizes)]
-
-        # ลบหัวใจเก่า
-        for hid in heart_ids:
-            canvas.delete(hid)
-        heart_ids.clear()
-
-        # วาดหัวใจใหม่
-        cx, cy = 395, 250  # จุดกลางตา
-        scale = size / 10.0
-        points = [
-            cx, cy,
-            cx - 5 * scale, cy - 5 * scale,
-            cx - 10 * scale, cy - 3 * scale,
-            cx - 10 * scale, cy + 2 * scale,
-            cx, cy + 10 * scale,
-            cx + 10 * scale, cy + 2 * scale,
-            cx + 10 * scale, cy - 3 * scale,
-            cx + 5 * scale, cy - 5 * scale,
-        ]
-        hid = canvas.create_polygon(points, fill="red", outline="red", smooth=True)
-        heart_ids.append(hid)
-
-        canvas.after(200, lambda: loop_heart_in_eye(step + 1))
-    
-    def restore_normal():
-        heart_looping[0] = False
-        draw_minion(canvas)
-        should_blink[0] = True
-        blink_eye()
-    
-    should_blink[0] = False  # หยุดกระพริบ
-    if eye_cover_id[0]:#ถ้ามีเปลือกตาให้ลบ
-        canvas.delete(eye_cover_id[0])
-        eye_cover_id[0] = None
-    # draw_minion(canvas)
-    canvas.delete("eye")
-    heart_looping[0] = True
-    
-    loop_heart_in_eye()
-    canvas.after(3000, restore_normal)  # หยุดเต้นหลัง 10 วิ      
-    
-def draw_minion(canvas):
+def draw_minion(canvas,color_body):
     # ตัว
-    canvas.create_arc(250, 100, 550, 400, start=0, extent=180,  style=tk.CHORD,fill="#ffe941", outline="#ffe941", width=4)
-    canvas.create_rectangle(250, 250, 550, 400, fill="#ffe941", outline="#ffe941")  
-    canvas.create_rectangle(250, 250, 550, 550, fill="#ffe941", outline="#ffe941")
+    canvas.create_arc(250, 100, 550, 400, start=0, extent=180,  style=tk.CHORD,fill=color_body, outline=color_body, width=4)
+    canvas.create_rectangle(250, 250, 550, 400, fill=color_body, outline=color_body)  
+    canvas.create_rectangle(250, 250, 550, 550, fill=color_body, outline=color_body)
 
     # #ผม
     canvas.create_line(390,105,350,105,300,140,smooth=True,width=3)
@@ -130,7 +37,7 @@ def draw_minion(canvas):
     canvas.create_line(410,110,470,130,490,160,smooth=True,width=3)
 
     # # ตาแว่น
-    canvas.create_oval(315, 160, 470, 340, fill="#ffe941", outline="silver", width=10)
+    canvas.create_oval(315, 160, 470, 340, fill=color_body, outline="silver", width=10)
 
     # ตาขาว
     canvas.create_oval(320, 165, 465, 335, fill="white", outline="white")
@@ -146,10 +53,8 @@ def draw_minion(canvas):
     canvas.create_rectangle(470, 220, 500, 270, fill="silver", width=0)#right
     canvas.create_rectangle(500, 220, 552, 270, fill="black", width=0)
 
-    
-    
     # ปากยิ้ม
-    canvas.create_arc(340, 320, 450, 400, start=180, extent=180, style=tk.CHORD ,fill="#dd6f6e",outline="#ffe941", width=3,tag="face")
+    canvas.create_arc(340, 320, 450, 400, start=180, extent=180, style=tk.CHORD ,fill="#dd6f6e",outline=color_body, width=3,tag="face")
     
 
     # # ชุดเอี๊ยม
@@ -193,10 +98,7 @@ def draw_minion(canvas):
                         535,512,
                         550,525, fill="gray", width=1,smooth=True)
     canvas.create_arc(250, 510, 550, 590,start=180, extent=180, style=tk.CHORD,fill="#6281b0", outline="#6281b0")
-
-    
-
-    # # แขน
+      # # แขน
     canvas.create_polygon(250, 423, 
                           220,480,
                           215,510,
@@ -210,7 +112,7 @@ def draw_minion(canvas):
                           240,485,
                           254,478,
                           250,443
-                          ,fill='#ffe941' ,smooth=True)#แขนซ้าย
+                          ,fill=color_body ,smooth=True)#แขนซ้าย
     
     canvas.create_polygon(549,480,
                           558,475,
@@ -224,7 +126,7 @@ def draw_minion(canvas):
                           586,510,
                           587,480,
                           548,415,
-                          fill='#ffe941',smooth=True)#แขนขวา
+                          fill=color_body,smooth=True)#แขนขวา
     
     #มือ
     canvas.create_polygon(202,551,
@@ -292,23 +194,134 @@ def draw_minion(canvas):
                           460, 620,
                           440, 630,  
                           fill='#313131', smooth=True)
+
+def blink_eye():
+    if not should_blink[0]:
+        return  # ถ้าไม่ควรกระพริบตา ให้หยุดทำงาน
+    if blink_state[0]:
+        # ลืมตา
+        if eye_cover_id[0]:
+            canvas.delete(eye_cover_id[0])
+            eye_cover_id[0] = None
+        blink_state[0] = False
+        canvas.after(3000, blink_eye)
+    else:
+        # หลับตา
+        eye_cover_id[0] = canvas.create_oval(320, 165, 465, 340,
+                                                fill=color_body, outline=color_body)
+        blink_state[0] = True
+        canvas.after(150, blink_eye)
+
+def show_bored_then_back():
+
+    def draw_bored():
+        canvas.delete("face")  # ลบเฉพาะหน้าก่อนวาดใหม่
+        canvas.delete("mouth")
+        # ตาขาว
+        canvas.create_arc(320, 165, 465, 340,start=0, extent=180, style=tk.CHORD,fill=color_body,outline=color_body, width=2)#eye top
+        canvas.create_arc(320, 165, 465, 335,start=180, extent=180, style=tk.CHORD,fill="white",outline="white", width=2)#eye bottom
+        #ตาดำ
+        canvas.create_arc(340, 210, 400, 290,start=180, extent=180, style=tk.CHORD,fill="brown",outline="brown", width=2)
+        canvas.create_arc(350, 220, 390, 280,start=180, extent=180, style=tk.CHORD,fill="black",outline="black", width=2)
+        # ปาก
+        canvas.create_line(290, 330, 360,380,390,380,smooth=True,width=2)
+   
+    if eye_cover_id[0]:  # ถ้าตากำลังหลับอยู่ ให้ลบเปลือกตา
+        canvas.delete(eye_cover_id[0])
+        eye_cover_id[0] = None
+        blink_state[0] = False
+    def restore_normal():
+        draw_minion(canvas,"#ffe941")
+        should_blink[0] = True
+        blink_eye()  # กลับมากระพริบต่อ
+      
+    draw_bored()
+    canvas.after(3000, restore_normal) 
+
+counter = 0
+changing = False
+def random_color_loop():
+    global color_body, counter, changing
+
+    if counter >= 50:  
+        color_body = "#ffe941"
+        draw_minion(canvas, color_body)
+        changing = False
+        counter=0
+        return
+
+    # สุ่มสีและวาดใหม่
+    random_color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+    color_body = random_color
+    draw_minion(canvas, color_body)
+
+    counter += 1
+    root.after(50, random_color_loop)  
+
+def show_love_face():
+    def loop_heart_in_eye(step=0):
+        # canvas.delete("eye")
+        if not heart_looping[0]:
+            # หยุดแอนิเมชัน: ลบหัวใจทั้งหมด
+            for hid in heart_ids:
+                canvas.delete(hid)
+            heart_ids.clear()
+            return
+
+        sizes = [40, 60, 80, 60]  # ขนาดหัวใจ วนเป็นจังหวะตุ้บๆ
+        size = sizes[step % len(sizes)]
+
+        # ลบหัวใจเก่า
+        for hid in heart_ids:
+            canvas.delete(hid)
+        heart_ids.clear()
+
+        # วาดหัวใจใหม่
+        cx, cy = 395, 250  # จุดกลางตา
+        scale = size / 10.0
+        points = [
+            cx, cy,
+            cx - 5 * scale, cy - 5 * scale,
+            cx - 10 * scale, cy - 3 * scale,
+            cx - 10 * scale, cy + 2 * scale,
+            cx, cy + 10 * scale,
+            cx + 10 * scale, cy + 2 * scale,
+            cx + 10 * scale, cy - 3 * scale,
+            cx + 5 * scale, cy - 5 * scale,
+        ]
+        hid = canvas.create_polygon(points, fill="red", outline="red", smooth=True)
+        heart_ids.append(hid)
+
+        canvas.after(200, lambda: loop_heart_in_eye(step + 1))
     
-button_frame = tk.Frame(root)
-button_frame.pack(pady=20)  # วางไว้ด้านขวาของ root window
-btn_font = tkFont.Font(family="Tahoma", size=20, weight="bold")
+    def restore_normal():
+        heart_looping[0] = False
+        draw_minion(canvas,color_body)
+        should_blink[0] = True
+        blink_eye()
+    
+    should_blink[0] = False  # หยุดกระพริบ
+    if eye_cover_id[0]:#ถ้ามีเปลือกตาให้ลบ
+        canvas.delete(eye_cover_id[0])
+        eye_cover_id[0] = None
+    # draw_minion(canvas)
+    canvas.delete("eye")
+    heart_looping[0] = True
+    
+    loop_heart_in_eye()
+    canvas.after(3000, restore_normal)     
 
 btn_bored = tk.Button(button_frame, text="bored face",font=btn_font, command=show_bored_then_back, width=15, height=2)
 btn_bored.pack(side="left", padx=10)
 
-btn_crazy = tk.Button(button_frame, text="crazy face",font=btn_font, command=show_love_face, width=15, height=2)
+btn_crazy = tk.Button(button_frame, text="random color loop",font=btn_font, command=random_color_loop, width=15, height=2)
 btn_crazy.pack(side="left", padx=10)
 
 btn_love = tk.Button(button_frame, text="in love Face",font=btn_font, command=show_love_face, width=15, height=2)
 btn_love.pack(side="left", padx=10)
 
 
-draw_minion(canvas)
+draw_minion(canvas,color_body)
 blink_eye()
-
 
 root.mainloop()
